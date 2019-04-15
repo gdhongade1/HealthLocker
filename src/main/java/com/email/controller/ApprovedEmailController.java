@@ -24,6 +24,7 @@ public class ApprovedEmailController {
 	@Autowired
 	ApprovedEmailService service;
 	
+	
 	@PostMapping
 	public ApprovedEmail create(@RequestBody ApprovedEmail email){
 	    return service.save(email);
@@ -32,6 +33,11 @@ public class ApprovedEmailController {
 	@GetMapping
 	public List<ApprovedEmail> findAll(){
 	  return service.findAll();
+	}
+	
+	@GetMapping("/approved")
+	public List<ApprovedEmail> findByIsDeleted(){
+	  return service.findByIsDeleted();
 	}
 	
 	@PutMapping(value="/{id}")

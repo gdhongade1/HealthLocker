@@ -20,6 +20,12 @@ public class EmailDataService {
 	public List<EmailData> findAll(){
 		  return (List<EmailData>) repo.findAll();
 		}
+	
+
+	public List<EmailData> findByStatus(String status){
+		  return (List<EmailData>) repo.findByStatus(status);
+		}
+	
 	public EmailData findById(Long id){
 		  return  repo.findOne(id);
 		}

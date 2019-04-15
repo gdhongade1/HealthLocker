@@ -51,8 +51,8 @@ public class ApprovedEmail {
 	@Column(name="star")
 	private boolean star;
 	
-	@Column(name="isDeleted")
-	private boolean isDeleted; 		
+	@Column(name="deleted")
+	private boolean deleted; 		
 	
 	@Column(name="extra1")
 	private String extra1;	
@@ -207,15 +207,6 @@ public class ApprovedEmail {
 	}
 
 
-
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
-
 	public String getExtra1() {
 		return extra1;
 	}
@@ -230,6 +221,14 @@ public class ApprovedEmail {
 
 	public void setExtra2(String extra2) {
 		this.extra2 = extra2;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public String getCreatedOn() {

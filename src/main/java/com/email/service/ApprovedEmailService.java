@@ -25,6 +25,9 @@ public class ApprovedEmailService {
 	    return repo.save(email);
 	}
 	
+	public List<ApprovedEmail> findByIsDeleted(){
+		  return repo.findByDeleted(false);
+		}
 	public List<ApprovedEmail> findAll(){
 		  return (List<ApprovedEmail>) repo.findAll();
 		}
