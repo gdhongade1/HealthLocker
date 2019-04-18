@@ -1,8 +1,11 @@
 package com.email.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,24 +25,30 @@ public class UserRegistrationController {
 	UserRegistrationService service;
 	
 	@PostMapping
-	public UserRegistration create(@RequestBody UserRegistration user){
-	    return service.save(user);
+	public ResponseEntity<UserRegistration> create(@RequestBody UserRegistration user,Principal principal){
+		UserRegistration appEmail=null;
+			appEmail=service.save(user);
+			return new ResponseEntity<UserRegistration>(appEmail,HttpStatus.OK);
 	}
 	
 	@GetMapping
-	public List<UserRegistration> findAll(){
-	  return service.findAll();
+	public ResponseEntity<List<UserRegistration>> findAll(Principal principal){
+		List<UserRegistration> appEmail=null;
+			appEmail= service.findAll();
+			return new ResponseEntity<List<UserRegistration>>(appEmail,HttpStatus.OK);
 	}
 	
 	@PutMapping(value="/{id}")
-	public UserRegistration updateById(@PathVariable Long id, @RequestBody UserRegistration user) {
-		return service.save(user);
+	public ResponseEntity<UserRegistration> updateById(@PathVariable Long id, @RequestBody UserRegistration user,Principal principal) {
+		UserRegistration appEmail=null;
+			appEmail=service.save(user);
+			return new ResponseEntity<UserRegistration>(appEmail,HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path ={"/{id}"})
-	public String deleteById(@PathVariable Long id) {
-		service.deleteById(id);
-		return "success..";
+	public ResponseEntity<String> deleteById(@PathVariable Long id,Principal principal) {
+			service.deleteById(id);
+			return new ResponseEntity<String>("success..",HttpStatus.OK);
 	}
 
 }

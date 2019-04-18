@@ -18,7 +18,7 @@ public class EmailRemark {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="esId")
-	private long esId;
+	private long erId;
 	
 	@Column(name="appEmailId")
 	private long appEmailId;
@@ -43,14 +43,14 @@ public class EmailRemark {
 		this.appEmail = appEmail;
 	}
 
-	public long getEsId() {
-		return esId;
+
+	public long getErId() {
+		return erId;
 	}
 
-	public void setEsId(long esId) {
-		this.esId = esId;
+	public void setErId(long erId) {
+		this.erId = erId;
 	}
-
 
 	public long getAppEmailId() {
 		return appEmailId;

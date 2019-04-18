@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.email.GlobalProperties;
 import com.email.entity.EmailData;
 import com.email.repository.EmailDataRepository;
+import com.email.repository.UserRegistrationRepository;
 @Component
 public class TaskSchedularUtil {
 	@Autowired
@@ -21,6 +22,9 @@ public class TaskSchedularUtil {
 	
 	@Autowired
 	GlobalProperties prop;
+	
+	@Autowired
+	UserRegistrationRepository userDao;
 	 
 	@Scheduled(cron ="${emailFetch.trigger}") 
 	 public void checkEmail(){  
@@ -34,7 +38,7 @@ public class TaskSchedularUtil {
 		      String port = prop.getEmailPort();
 		     // es.check(host, mailStoreType, username, password);
 		     // Email e =es.checkEmail(host, mailStoreType, username, password);
-		      ArrayList<EmailData> emailData=util.downloadEmails(host, port, username, password);
+		      ArrayList<EmailData> emailData=util.downloadEmails(host, port, username, password,userDao);
 		      if(emailData!=null) {
 		    	  dao.save(emailData);
 		      }

@@ -37,9 +37,6 @@ public class Attachment {
 	@Column(name="user_id")
 	private long user_id; 
 	
-	@Column(name="email_Id")
-	private long email_Id;
-	
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "attachment")
 	@JsonIgnore
 	private List<ApprovedEmail> appEmail;
@@ -103,17 +100,6 @@ public class Attachment {
 	public void setUser_id(long user_id) {
 		this.user_id = user_id;
 	}
-
-	public long getEmail_Id() {
-		return email_Id;
-	}
-
-	public void setEmail_Id(long email_Id) {
-		this.email_Id = email_Id;
-	}
-
-
-
 
 
 	public List<ApprovedEmail> getAppEmail() {

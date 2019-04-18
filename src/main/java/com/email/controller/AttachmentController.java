@@ -1,8 +1,11 @@
 package com.email.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.email.entity.ApprovedEmail;
 import com.email.entity.Attachment;
 import com.email.entity.UserRegistration;
 import com.email.service.AttachmentService;
@@ -24,38 +28,45 @@ public class AttachmentController {
 	AttachmentService service;
 	
 	@PostMapping
-	public Attachment create(@RequestBody Attachment user){
-	    return service.save(user);
-	}
-	
-	@PostMapping(value="/add")
-	public Attachment add(){
-		Attachment a = new Attachment();
-		a.setEmail_Id(1);
-		a.setFileId(1);
-		a.setFilePath("FIlepAth");
-		a.setFileSize(55);
-		a.setFileType("Text");
-		a.setUser_id(1);
-	    return service.save(a);
+	public ResponseEntity<Attachment> create(@RequestBody Attachment attachment,Principal principal){
+		Attachment attachment1=null;
+		if(principal!=null) {
+			attachment1=service.save(attachment);
+			return new ResponseEntity<Attachment>(attachment1,HttpStatus.OK);
+		}
+		return new ResponseEntity<Attachment>(attachment1,HttpStatus.UNAUTHORIZED);
 	}
 	
 	
 	@GetMapping
-	public List<Attachment> findAll(){
-	  return service.findAll();
+	public ResponseEntity<List<Attachment>> findAll(Principal principal){
+		
+		List<Attachment> appEmail=null;
+		if(principal!=null) {
+			appEmail= service.findAll();
+			return new ResponseEntity<List<Attachment>>(appEmail,HttpStatus.OK);
+		}
+		return new ResponseEntity<List<Attachment>>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@PutMapping(value="/{id}")
-	public Attachment updateById(@PathVariable Long id, @RequestBody Attachment user) {
-		return service.save(user);
+	public ResponseEntity<Attachment> updateById(@PathVariable Long id, @RequestBody Attachment user,Principal principal) {
+		Attachment appEmail=null;
+		if(principal!=null) {
+			appEmail=service.save(user);
+			return new ResponseEntity<Attachment>(appEmail,HttpStatus.OK);
+		}
+		return new ResponseEntity<Attachment>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@DeleteMapping(path ={"/{id}"})
-	public String deleteById(@PathVariable Long id) {
-		service.deleteById(id);
-		return "success..";
+	public ResponseEntity<String> deleteById(@PathVariable Long id,Principal principal) {
+		
+		if(principal!=null) {
+			service.deleteById(id);
+			return new ResponseEntity<String>("success..",HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Failed..",HttpStatus.UNAUTHORIZED);
+		
 	}
-
-
 }

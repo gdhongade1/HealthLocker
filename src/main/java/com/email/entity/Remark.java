@@ -21,7 +21,7 @@ public class Remark {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="remarkId")
-	private int remarkId; 
+	private long remarkId; 
 	
 	@Column(name="name")
 	private String name; 	
@@ -44,11 +44,12 @@ public class Remark {
 		this.appEmail = appEmail;
 	}
 
-	public int getRemarkId() {
+
+	public long getRemarkId() {
 		return remarkId;
 	}
 
-	public void setRemarkId(int remarkId) {
+	public void setRemarkId(long remarkId) {
 		this.remarkId = remarkId;
 	}
 

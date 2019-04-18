@@ -22,11 +22,11 @@ public class RemarkService {
 	public List<Remark> findAll(){
 		  return (List<Remark>) repo.findAll();
 		}
-	public Remark findById(int id){
+	public Remark findById(long id){
 		  return  repo.findOne(id);
 		}
 	
-	public String deleteById( int id) {
+	public String deleteById( long id) {
 		repo.delete(id);
 		return "success..";
 	}

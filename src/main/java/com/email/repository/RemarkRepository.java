@@ -11,4 +11,4 @@ import org.springframework.stereotype.Repository;
 import com.email.entity.Remark;
 
 @Repository
-public interface RemarkRepository extends CrudRepository<Remark,Integer>{}
+public interface RemarkRepository extends CrudRepository<Remark,Long>{}

@@ -7,6 +7,7 @@ import javax.mail.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.email.entity.Attachment;
 import com.email.entity.EmailData;
 import com.email.entity.UserRegistration;
 import com.email.repository.EmailDataRepository;
@@ -14,6 +15,7 @@ import com.email.repository.UserRegistrationRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -36,9 +38,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-
+@Component
 public class EmailUtil {
 	
 	@Autowired
@@ -92,10 +95,11 @@ public class EmailUtil {
 	
 
 	 public ArrayList<EmailData> downloadEmails(String host, String port,
-	            String userName, String password) {
+	            String userName, String password,UserRegistrationRepository userDao) {
 		 
 	        Properties properties = new Properties();
 	        ArrayList<EmailData> emailList = new ArrayList<EmailData>();
+	        ArrayList<Attachment> attachList = new ArrayList<Attachment>();
 	       
 	        // server setting
 	        properties.put("mail.pop3.host", host);
@@ -135,6 +139,39 @@ public class EmailUtil {
 	 
 	                String contentType = message.getContentType();
 	                String messageContent = "";
+	                
+	                EmailData email= new EmailData();
+		                email.setBody(messageContent);
+		                email.setCcId(ccList);
+		                email.setCreatedOn(sentDate);
+		                email.setDateTime(sentDate);
+		                email.setSenderId(sender);
+		                email.setStatus("New");
+		                email.setSubject(subject);
+		                email.setToId(toList);
+	                
+	                UserRegistration user = userDao.findByEmailAddressIgnoreCase(toList);
+	                long userID;
+	                if(user!=null) {
+	                	userID=user.getUser_reg_id();
+	                	 email.setUser_id(userID);
+	                }else {
+	                	UserRegistration u = new UserRegistration();
+	                	int toIndex= from.indexOf("<");
+	                	String nameArr[]=from.split("<");
+	                	String nameString=from.substring(0, toIndex);
+	                	String nameAr[]=nameString.split(" ");
+	                	String fName=nameAr[0];
+	                	String lName=nameAr[1];
+	                	
+	                	u.setFirstName(fName);
+	                	u.setLastName(lName);
+	                	u.setEmailAddress(toList);
+	                	u.setMobileNumber(toList.substring(0, 9));
+	                	UserRegistration addedUser=userDao.save(u);
+	                	userID=addedUser.getUser_reg_id();
+	                	 email.setUser_id(userID);
+	                }
 	 
 	                // store attachment file name, separated by comma
 	                String attachFiles = "";
@@ -148,10 +185,21 @@ public class EmailUtil {
 	                    for (int partCount = 0; partCount < numberOfParts; partCount++) {
 	                        MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
 	                        if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
+	                        	Attachment attach= new Attachment();
 	                            // this part is attachment
 	                            String fileName = part.getFileName();
+	                            String fileType= fileName.substring(fileName.lastIndexOf(".")+1);
 	                            attachFiles += fileName + ", ";
-	                            part.saveFile("E:/Attachment" + File.separator + fileName);
+	                            long currentTime= new Date().getTime();
+	                            String filePath="C:/Attachment" + File.separator + fileName.substring(0,fileName.lastIndexOf("."))+"_"+currentTime+"."+fileType;
+	                            attach.setFileType(fileType);
+	                            attach.setFileSize( part.getSize());
+	                            attach.setFilePath(filePath);
+	                            attach.setUser_id(userID);
+	                            attachList.add(attach);
+	                            email.setAttachment(attachList);
+	                            String newFileName=fileName.substring(0,fileName.lastIndexOf("."))+"_"+currentTime+"."+fileType;
+	                            part.saveFile("C:/Attachment" + File.separator + newFileName);
 	                        } else {
 	                            // this part may be the message content
 	                            //messageContent = part.getContent().toString();
@@ -159,11 +207,7 @@ public class EmailUtil {
 	    	                    if (content != null) {
 	    	                        messageContent = content.toString();
 	    	                    }*/
-	                        	 Object content = message.getContent();
-	     	                    if (content != null) {
-	     	                        messageContent = content.toString();
-	     	                    }
-	                        	messageContent = content.toString();
+
 	                        }
 	                    }
 	 
@@ -180,18 +224,9 @@ public class EmailUtil {
 	 
 	                // print out details of each message
 	                System.out.println("Message #" + (i + 1) + ":");
-	                EmailData email= new EmailData();
-	                email.setBody(messageContent);
-	                email.setCcId(ccList);
-	                email.setCreatedOn(sentDate);
-	                email.setDateTime(sentDate);
-	                email.setSenderId(sender);
-	                email.setStatus("New");
-	                email.setSubject(subject);
-	                email.setToId(toList);
-	                email.setUser_id(1); //Need to get it from user table
-	                
 	                emailList.add(email);
+	                
+	                
 	                
 	                System.out.println("\t From: " + from);
 	                System.out.println("\t To : " + toList);

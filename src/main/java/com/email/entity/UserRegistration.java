@@ -28,11 +28,11 @@ public class UserRegistration {
 	@Column(name="lastName")
     private String lastName;
     
-	@Column(name="emailAddress")
+	@Column(name="emailAddress",unique=true)
     private String emailAddress;
     
 	@Column(name="mobileNumber")
-    private Long mobileNumber;
+    private String mobileNumber;
     
 	@Column(name="password")
     private String password;
@@ -106,11 +106,11 @@ public class UserRegistration {
 	}
 
 	
-	public Long getMobileNumber() {
+	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
-	public void setMobileNumber(Long mobileNumber) {
+	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
 

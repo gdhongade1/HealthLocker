@@ -34,4 +34,8 @@ public class UserRegistrationService {
 		return "success..";
 	}
 
+	public UserRegistration findByEmailAddressIgnoreCase(String email){
+		
+	    return repo.findByEmailAddressIgnoreCase(email);
+	}
 }

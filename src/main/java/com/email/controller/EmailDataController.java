@@ -1,8 +1,11 @@
 package com.email.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.email.entity.ApprovedEmail;
 import com.email.entity.EmailData;
+import com.email.model.User;
 import com.email.service.EmailDataService;
 
 @RestController
@@ -27,32 +31,58 @@ public class EmailDataController {
 	EmailDataService service;
 	
 	@PostMapping
-	public EmailData create(@RequestBody EmailData email){
-	    return service.save(email);
+	public ResponseEntity<EmailData> create(@RequestBody EmailData email,Principal principal){
+		EmailData emaildata=null;
+		if(principal!=null) {
+			emaildata=service.save(email);
+			return new ResponseEntity<EmailData>(emaildata,HttpStatus.OK);
+		}
+		 return new ResponseEntity<EmailData>(emaildata,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@GetMapping
-	public List<EmailData> findAll(){
-	  return service.findAll();
+	public ResponseEntity<List<EmailData>> findAll(Principal principal){
+		List<EmailData> emaildata=null;
+		if(principal!=null) {
+			emaildata=service.findAll();
+			return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.OK);
+		}
+		 return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@GetMapping("/new")
-	public List<EmailData> findByStatus(){
-	  return service.findByStatus(STATUS_NEW);
+	public ResponseEntity<List<EmailData>> findByStatus(Principal principal){
+		List<EmailData> emaildata=null;
+		if(principal!=null) {
+			emaildata=service.findByStatus(STATUS_NEW);
+			return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.OK);
+		}
+		 return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@PutMapping(value="/{id}")
-	public EmailData updateById(@PathVariable Long id, @RequestBody EmailData email) {
-		//email.setEmail_user_id(id);;
-		return service.save(email);
+	public ResponseEntity<EmailData> updateById(@PathVariable Long id, @RequestBody EmailData email,Principal principal) {
+		EmailData emaildata=null;
+		if(principal!=null) {
+			emaildata=service.save(email);
+			return new ResponseEntity<EmailData>(emaildata,HttpStatus.OK);
+		}
+		 return new ResponseEntity<EmailData>(emaildata,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@DeleteMapping(path ={"/{id}"})
-	public String deleteById(@PathVariable Long id) {
-		EmailData emailData= service.findById(id);
-		emailData.setStatus(STATUS_DECLINED);
-		service.save(emailData);
-		return "success..";
+	public ResponseEntity<String> deleteById(@PathVariable Long id,Principal principal) {
+		EmailData emaildata=null;
+		if(principal!=null) {
+			emaildata=service.findById(id);
+			emaildata.setStatus(STATUS_DECLINED);
+			EmailData added =service.save(emaildata);
+			if(added!=null) {
+				return new ResponseEntity<String>("Successfully deleted",HttpStatus.OK);
+			}
+		}
+		 return new ResponseEntity<String>("Not deleted",HttpStatus.UNAUTHORIZED);
+		
 	}
 
 }

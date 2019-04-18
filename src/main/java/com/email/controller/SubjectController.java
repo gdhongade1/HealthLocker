@@ -1,8 +1,11 @@
 package com.email.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,24 +27,42 @@ public class SubjectController {
 	SubjectService service;
 	
 	@PostMapping
-	public Subject create(@RequestBody Subject user){
-	    return service.save(user);
+	public ResponseEntity<Subject> create(@RequestBody Subject user,Principal principal){
+		Subject appEmail=null;
+		if(principal!=null) {
+			appEmail=service.save(user);
+			return new ResponseEntity<Subject>(appEmail,HttpStatus.OK);
+		}
+		return new ResponseEntity<Subject>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@GetMapping
-	public List<Subject> findAll(){
-	  return service.findAll();
+	public ResponseEntity<List<Subject>> findAll(Principal principal){
+		List<Subject> appEmail=null;
+		if(principal!=null) {
+			appEmail= service.findAll();
+			return new ResponseEntity<List<Subject>>(appEmail,HttpStatus.OK);
+		}
+		return new ResponseEntity<List<Subject>>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@PutMapping(value="/{id}")
-	public Subject updateById(@PathVariable Long id, @RequestBody Subject user) {
-		return service.save(user);
+	public ResponseEntity<Subject> updateById(@PathVariable Long id, @RequestBody Subject user,Principal principal) {
+		Subject appEmail=null;
+		if(principal!=null) {
+			appEmail=service.save(user);
+			return new ResponseEntity<Subject>(appEmail,HttpStatus.OK);
+		}
+		return new ResponseEntity<Subject>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@DeleteMapping(path ={"/{id}"})
-	public String deleteById(@PathVariable Long id) {
-		service.deleteById(id);
-		return "success..";
+	public ResponseEntity<String> deleteById(@PathVariable Long id,Principal principal) {
+		if(principal!=null) {
+			service.deleteById(id);
+			return new ResponseEntity<String>("success..",HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Failed..",HttpStatus.UNAUTHORIZED);
 	}
 
 

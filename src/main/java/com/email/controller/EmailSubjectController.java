@@ -1,5 +1,6 @@
 package com.email.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +27,22 @@ public class EmailSubjectController {
 	EmailSubjectService service;
 	
 	@PostMapping
-	public EmailSubject create(@RequestBody EmailSubject user){
+	public EmailSubject create(@RequestBody EmailSubject user,Principal principal){
 	    return service.save(user);
 	}
 	
 	@GetMapping
-	public List<EmailSubject> findAll(){
+	public List<EmailSubject> findAll(Principal principal){
 	  return service.findAll();
 	}
 	
 	@PutMapping(value="/{id}")
-	public EmailSubject updateById(@PathVariable Long id, @RequestBody EmailSubject user) {
+	public EmailSubject updateById(@PathVariable Long id, @RequestBody EmailSubject user,Principal principal) {
 		return service.save(user);
 	}
 	
 	@DeleteMapping(path ={"/{id}"})
-	public String deleteById(@PathVariable Long id) {
+	public String deleteById(@PathVariable Long id,Principal principal) {
 		service.deleteById(id);
 		return "success..";
 	}
