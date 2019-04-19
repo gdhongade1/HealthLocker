@@ -33,6 +33,8 @@ public class EmailSubjectService {
 		return "success..";
 	}
 
-
+	public List<EmailSubject> saveAll(List<EmailSubject> emailList){
+	    return (List<EmailSubject>) repo.save(emailList);
+	}
 
 }

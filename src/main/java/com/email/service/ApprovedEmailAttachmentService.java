@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.email.entity.ApprovedEmailAttachment;
 import com.email.entity.EmailDataAttachment;
+import com.email.entity.EmailRemark;
 import com.email.repository.ApprovedEmailAttachmentRepository;
 import com.email.repository.EmailDataAttachmentRepository;
+import com.email.repository.EmailRemarkRepository;
 
 @Service
 public class ApprovedEmailAttachmentService {
@@ -32,5 +34,9 @@ public class ApprovedEmailAttachmentService {
 		return "success..";
 	}
 
+	
+	public List<ApprovedEmailAttachment> saveAll(List<ApprovedEmailAttachment> emailList){
+	    return (List<ApprovedEmailAttachment>) repo.save(emailList);
+	}
 
 }
