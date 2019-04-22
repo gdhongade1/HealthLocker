@@ -15,6 +15,7 @@ import com.email.repository.UserRegistrationRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
@@ -143,12 +144,13 @@ public class EmailUtil {
 	                EmailData email= new EmailData();
 		                email.setBody(messageContent);
 		                email.setCcId(ccList);
-		                email.setCreatedOn(sentDate);
+		                email.setCreatedOn(sentDate); //TODO -change to current date
 		                email.setDateTime(sentDate);
 		                email.setSenderId(sender);
 		                email.setStatus("New");
 		                email.setSubject(subject);
 		                email.setToId(toList);
+		                email.setUpdatedOn(sentDate);//TODO -change to current date
 	                
 	                UserRegistration user = userDao.findByEmailAddressIgnoreCase(toList);
 	                long userID;

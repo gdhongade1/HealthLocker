@@ -1,7 +1,12 @@
 package com.email.controller;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +55,17 @@ public class ApprovedEmailController {
 	EmailRemarkService emailRemarkService;
 	
 	@Autowired
+	EmailDataService emailDataService;
+	
+	@Autowired
 	ApprovedEmailAttachmentService approvedEmailAttachmentService;
+	public static final String STATUS_APPROVED="Approved";
 	
 	
 	@PostMapping
-	public ResponseEntity<ApprovedEmail> create(@RequestBody ApprovedEmail email,Principal principal){
+	public ResponseEntity<ApprovedEmail> create(@RequestBody ApprovedEmail email,Principal principal) throws ParseException{
 		ApprovedEmail appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			List<Subject> subjectList =email.getSub();
 			List<Subject> newSubjectList =new ArrayList<Subject>();
 			
@@ -134,8 +143,14 @@ public class ApprovedEmailController {
 			}
 			
 			email.setAttachment(null);
+			email.setDeleted(false);
+			email.setStar(false);
+			email.setHide(false);
+			
+			
 			
 			appEmail=service.save(email);
+			
 			
 			if(emailSubjectList.size()>0) {
 				for(EmailSubject emailSubject:emailSubjectList)
@@ -162,37 +177,42 @@ public class ApprovedEmailController {
 				approvedEmailAttachmentService.saveAll(approvedEmailAttachmentList);
 			}
 			
-			
+			EmailData emailData=emailDataService.findById(appEmail.getEmail_Id());
+			emailData.setStatus(STATUS_APPROVED);
+			EmailData added =emailDataService.save(emailData);
+			if(added!=null) {
+				System.out.println("successFully changed status to approved in emailData table.");
+			}
 			return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.OK);
-		//}
-		//return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<ApprovedEmail>> findAll(Principal principal){
 		List<ApprovedEmail> appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			appEmail= service.findAll();
 			return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.OK);
-		//}
-		//return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@GetMapping("/approved")
 	public ResponseEntity<List<ApprovedEmail>> findByIsDeleted(Principal principal){
 		List<ApprovedEmail> appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			appEmail= service.findByIsDeleted();
 			return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.OK);
-		//}
-		//return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@PutMapping(value="/{id}")
-	public ResponseEntity<ApprovedEmail> updateById(@PathVariable Long id, @RequestBody ApprovedEmail email,Principal principal) {
+	public ResponseEntity<ApprovedEmail> updateById(@PathVariable Long id, @RequestBody ApprovedEmail email,Principal principal) throws ParseException {
 
 		ApprovedEmail appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			List<Subject> subjectList =email.getSub();
 			List<Subject> newSubjectList =new ArrayList<Subject>();
 			
@@ -269,8 +289,6 @@ public class ApprovedEmailController {
 				email.setSpec(null);
 			}
 			
-			email.setAttachment(null);
-			
 			appEmail=service.save(email);
 			
 			if(emailSubjectList.size()>0) {
@@ -300,49 +318,68 @@ public class ApprovedEmailController {
 			
 			
 			return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.OK);
-		//}
-		//return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.UNAUTHORIZED);
 	
 	}
 	
 	@DeleteMapping(path ={"/{id}"})
 	public ResponseEntity<String> deleteById(@PathVariable Long id,Principal principal) {
-		//if(principal!=null) {
+		if(principal!=null) {
 			ApprovedEmail apEmail= service.findById(id);
 			apEmail.setDeleted(true);
 			service.save(apEmail);
 			return new ResponseEntity<String>("success..",HttpStatus.OK);
-		//}
-		//return new ResponseEntity<String>("Failed..",HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<String>("Failed..",HttpStatus.UNAUTHORIZED);
 	}
 	
 	@GetMapping("/getHidden")
 	public ResponseEntity<List<ApprovedEmail>> findByHide(Principal principal){
 		List<ApprovedEmail> appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			appEmail= service.findByHide();
 			return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.OK);
-		//}
-		//return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	@GetMapping("/getStar")
 	public ResponseEntity<List<ApprovedEmail>> findByStar(Principal principal){
 		List<ApprovedEmail> appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			appEmail= service.findByStar();
 			return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.OK);
-		//}
-		//return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
 	
 	@PutMapping("/hideUnhide/{id}/{status}")
 	public ResponseEntity<String> hideUnhideEmail(@PathVariable Long id,@PathVariable boolean status, Principal principal){
 		List<ApprovedEmail> appEmail=null;
-		//if(principal!=null) {
+		if(principal!=null) {
 			 service.hideUnhideEmail(status,id);
 			 return new ResponseEntity<String>("success..",HttpStatus.OK);
-		//}
-		//return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
+		}
+		 return new ResponseEntity<String>("failed..",HttpStatus.UNAUTHORIZED);
+	}
+	
+	@PutMapping("/starUnstar/{id}/{status}")
+	public ResponseEntity<String> starUnstar(@PathVariable Long id,@PathVariable boolean status, Principal principal){
+		List<ApprovedEmail> appEmail=null;
+		if(principal!=null) {
+			 service.starUnstar(status,id);
+			 return new ResponseEntity<String>("success..",HttpStatus.OK);
+		}
+		 return new ResponseEntity<String>("failed..",HttpStatus.UNAUTHORIZED);
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<ApprovedEmail> getOne(@PathVariable Long id,Principal principal){
+		ApprovedEmail appEmail=null;
+		if(principal!=null) {
+			appEmail= service.getOne(id);
+			return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.OK);
+		}
+		return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.UNAUTHORIZED);
+	}
 }

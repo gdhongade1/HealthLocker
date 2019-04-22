@@ -1,5 +1,6 @@
 package com.email.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -40,6 +42,7 @@ public class ApprovedEmail {
 	private String body; 
 	
 	@Column(name="date_time")
+	//@JsonFormat(pattern="dd-mm-yyyy")
 	private String date_time; 
 	
 	@Column(name="amount")
@@ -61,9 +64,11 @@ public class ApprovedEmail {
 	private String extra2; 	
 	
 	@Column(name="createdOn")
+	//@JsonFormat(pattern="dd-mm-yyyy")
 	private String createdOn; 
 	
 	@Column(name="updatedOn")
+	//@JsonFormat(pattern="dd-mm-yyyy")
 	private String updatedOn; 	
 	
 	

@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.transaction.Transactional;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,14 @@ public interface ApprovedEmailRepository extends CrudRepository<ApprovedEmail,Lo
 	 List<ApprovedEmail> findByDeleted(boolean isDeleted);
 	 List<ApprovedEmail> findByHide(boolean isHidden);
 	 List<ApprovedEmail> findByStar(boolean isStar);
-	 @Query(value= "update table ApprovedEmail a set a.hide=?1 where a.appEmailId=?2",nativeQuery=true)
+	 
+	 @Transactional
+	 @Modifying
+	 @Query("update ApprovedEmail a set a.hide=?1 where a.appEmailId=?2")
 	 void  hideUnhideEmail(boolean status,Long id);
+	 
+	 @Transactional
+	 @Modifying
+	 @Query("update ApprovedEmail a set a.star=?1 where a.appEmailId=?2")
+	 void  starUnstar(boolean status,Long id);
 }
