@@ -51,7 +51,15 @@ public class EmailDataController {
 		}
 		 return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.UNAUTHORIZED);
 	}
-	
+	@GetMapping("/getAllByUserId/{id}")
+	public ResponseEntity<List<EmailData>> findByUserId(@PathVariable Long id ,Principal principal){
+		List<EmailData> emaildata=null;
+		if(principal!=null) {
+			emaildata=service.findByUserId(id);
+			return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.OK);
+		}
+		 return new ResponseEntity<List<EmailData>>(emaildata,HttpStatus.UNAUTHORIZED);
+	}
 	@GetMapping("/new")
 	public ResponseEntity<List<EmailData>> findByStatus(Principal principal){
 		List<EmailData> emaildata=null;

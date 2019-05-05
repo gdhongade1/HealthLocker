@@ -30,6 +30,11 @@ public class AttachmentService {
 		repo.delete(id);
 		return "success..";
 	}
+	
+	public List<Attachment> findByUserId(Long id){
+		
+		  return (List<Attachment>) repo.findByUserId(id);
+	}
 
 
 }

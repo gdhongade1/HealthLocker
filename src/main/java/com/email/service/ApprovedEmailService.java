@@ -66,5 +66,10 @@ public class ApprovedEmailService {
 	public ApprovedEmail getOne(Long id){
 			return repo.findOne(id);
 	}
+	
+	public List<ApprovedEmail> findByUserId(Long id){
+		
+		  return (List<ApprovedEmail>) repo.findByUserId(id);
+	}
 
 }

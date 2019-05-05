@@ -382,4 +382,14 @@ public class ApprovedEmailController {
 		}
 		return new ResponseEntity<ApprovedEmail>(appEmail,HttpStatus.UNAUTHORIZED);
 	}
+	
+	@GetMapping("/getAllByUserId/{id}")
+	public ResponseEntity<List<ApprovedEmail>> findByUserId(@PathVariable Long id ,Principal principal){
+		List<ApprovedEmail> appEmail=null;
+		if(principal!=null) {
+			appEmail=service.findByUserId(id);
+			return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.OK);
+		}
+		 return new ResponseEntity<List<ApprovedEmail>>(appEmail,HttpStatus.UNAUTHORIZED);
+	}
 }

@@ -63,5 +63,16 @@ public class UserAddressController {
 		}
 		return new ResponseEntity<String>("Failed..",HttpStatus.UNAUTHORIZED);
 	}
+	
+	@GetMapping("/getAllByUserId/{id}")
+	public ResponseEntity<List<UserAddress>> findByUserId(@PathVariable Long id ,Principal principal){
+		List<UserAddress> appEmail=null;
+		if(true) {
+			//if(principal!=null) {
+			appEmail=service.findByUserId(id);
+			return new ResponseEntity<List<UserAddress>>(appEmail,HttpStatus.OK);
+		}
+		 return new ResponseEntity<List<UserAddress>>(appEmail,HttpStatus.UNAUTHORIZED);
+	}
 
 }

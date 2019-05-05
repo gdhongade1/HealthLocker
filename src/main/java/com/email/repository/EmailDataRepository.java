@@ -21,4 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Repository
 public interface EmailDataRepository extends CrudRepository<EmailData,Long> {
 	  List<EmailData> findByStatus(String status);
+	  @Query("select a from EmailData a where a.user_id=?1")
+	  List<EmailData> findByUserId(Long user_id);
 }

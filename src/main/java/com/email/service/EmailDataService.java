@@ -26,6 +26,11 @@ public class EmailDataService {
 		  return (List<EmailData>) repo.findByStatus(status);
 		}
 	
+	public List<EmailData> findByUserId(Long id){
+		
+		  return (List<EmailData>) repo.findByUserId(id);
+		}
+	
 	public EmailData findById(Long id){
 		  return  repo.findOne(id);
 		}

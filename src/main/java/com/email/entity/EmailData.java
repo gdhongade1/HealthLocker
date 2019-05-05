@@ -62,7 +62,9 @@ public class EmailData {
 	@Column(name="user_id")
 	private long user_id;
 	
-	 	@ManyToOne
+	 
+
+		@ManyToOne
 	    @JoinColumn
 	    @JsonIgnore
 	    private UserRegistration userEmail;
@@ -173,7 +175,6 @@ public class EmailData {
 		this.status = status;
 	}
 
-
 	public long getUser_id() {
 		return user_id;
 	}
@@ -182,6 +183,7 @@ public class EmailData {
 	public void setUser_id(long user_id) {
 		this.user_id = user_id;
 	}
+
 
 
 	public UserRegistration getUserEmail() {

@@ -69,4 +69,15 @@ public class AttachmentController {
 		return new ResponseEntity<String>("Failed..",HttpStatus.UNAUTHORIZED);
 		
 	}
+	
+	@GetMapping("/getAllByUserId/{id}")
+	public ResponseEntity<List<Attachment>> findByUserId(@PathVariable Long id ,Principal principal){
+		List<Attachment> appEmail=null;
+		if(true) {
+			//if(principal!=null) {
+			appEmail=service.findByUserId(id);
+			return new ResponseEntity<List<Attachment>>(appEmail,HttpStatus.OK);
+		}
+		 return new ResponseEntity<List<Attachment>>(appEmail,HttpStatus.UNAUTHORIZED);
+	}
 }

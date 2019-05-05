@@ -32,4 +32,7 @@ public interface ApprovedEmailRepository extends CrudRepository<ApprovedEmail,Lo
 	 @Modifying
 	 @Query("update ApprovedEmail a set a.star=?1 where a.appEmailId=?2")
 	 void  starUnstar(boolean status,Long id);
+	 
+	 @Query("select a from ApprovedEmail a where a.user_id=?1")
+	  List<ApprovedEmail> findByUserId(Long user_id);
 }

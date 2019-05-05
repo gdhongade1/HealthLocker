@@ -32,5 +32,10 @@ public class UserAddressService {
 		repo.delete(id);
 		return "success..";
 	}
+	
+	public List<UserAddress> findByUserId(Long id){
+		
+		  return (List<UserAddress>) repo.findByUserId(id);
+	}
 
 }
